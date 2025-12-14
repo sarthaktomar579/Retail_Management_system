@@ -24,6 +24,9 @@ const Transaction = mongoose.model(
 );
 
 // -------------------- API --------------------
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 app.get("/api/sales", async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
