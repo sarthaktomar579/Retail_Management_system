@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSales } from "../services/salesApi";
-import { Filters } from "../types";
+import { Filters } from "../utils/types";
 
 export default function useSalesData() {
   const [data, setData] = useState<any[]>([]);
