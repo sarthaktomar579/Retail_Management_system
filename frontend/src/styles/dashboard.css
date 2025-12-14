@@ -1,0 +1,104 @@
+/* Page background */
+body {
+  margin: 0;
+  background: #fff0f5;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* Main container */
+.dashboard {
+  padding: 24px;
+  max-width: 1400px;
+  margin: auto;
+}
+
+/* Title */
+.dashboard h1 {
+  margin-bottom: 16px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Top controls */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Filters row */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+/* Individual filter dropdown */
+.filter-group {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  min-width: 160px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Dropdown items */
+.dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Table container */
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Table header */
+.sales-table th {
+  background: #f0f2f7;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Table rows */
+.sales-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.sales-table tr:hover {
+  background: #f9fafc;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Loading text */
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #555;
+}
