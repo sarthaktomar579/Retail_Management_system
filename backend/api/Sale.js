@@ -40,15 +40,16 @@ export default async function handler(req, res) {
 
     let cursor = Sale.find(query);
 
-    // Default sort by Transaction ID (ascending) to ensure consistent ordering
+    // Apply sorting - always use Transaction ID as primary or secondary sort for consistency
+    // This ensures ID 1 always appears first when no other sort is specified
     if (sort === "amount_desc") {
-      cursor = cursor.sort({ "Final Amount": -1 });
+      cursor = cursor.sort({ "Final Amount": -1, "Transaction ID": 1 });
     } else if (sort === "amount_asc") {
-      cursor = cursor.sort({ "Final Amount": 1 });
+      cursor = cursor.sort({ "Final Amount": 1, "Transaction ID": 1 });
     } else if (sort === "date_desc") {
-      cursor = cursor.sort({ Date: -1 });
+      cursor = cursor.sort({ Date: -1, "Transaction ID": 1 });
     } else if (sort === "date_asc") {
-      cursor = cursor.sort({ Date: 1 });
+      cursor = cursor.sort({ Date: 1, "Transaction ID": 1 });
     } else {
       // Default: sort by Transaction ID ascending (so ID 1 comes first)
       cursor = cursor.sort({ "Transaction ID": 1 });
