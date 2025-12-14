@@ -3,6 +3,7 @@ const Sale = require("../model/Sale");
 
 module.exports = async function handler(req, res) {
   try {
+    // ✅ Always connect first
     await connectDB();
 
     const page = Number(req.query.page) || 1;
@@ -11,16 +12,22 @@ module.exports = async function handler(req, res) {
 
     const query = {};
 
+    // SEARCH
     if (req.query.search) {
-      query.customerName = { $regex: req.query.search, $options: "i" };
+      query.customerName = {
+        $regex: req.query.search,
+        $options: "i",
+      };
     }
 
+    // FILTERS
     ["region", "gender", "category", "paymentMethod"].forEach((key) => {
       if (req.query[key]) {
         query[key] = { $in: req.query[key].split(",") };
       }
     });
 
+    // SORT
     let sortOption = {};
     if (req.query.sort === "name-asc") sortOption.customerName = 1;
     if (req.query.sort === "name-desc") sortOption.customerName = -1;
@@ -28,6 +35,7 @@ module.exports = async function handler(req, res) {
     if (req.query.sort === "amount-desc") sortOption.amount = -1;
 
     const total = await Sale.countDocuments(query);
+
     const data = await Sale.find(query)
       .sort(sortOption)
       .skip(skip)
@@ -38,8 +46,9 @@ module.exports = async function handler(req, res) {
       totalPages: Math.ceil(total / LIMIT),
       currentPage: page,
     });
-  } catch (err) {
-    console.error("API ERROR:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
+
+  } catch (error) {
+    console.error("API ERROR:", error); // 👈 VERY IMPORTANT
+    return res.status(500).json({ error: error.message });
   }
 };
