@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
-const SaleSchema = new mongoose.Schema({}, { strict: false });
+const saleSchema = new mongoose.Schema({
+  Transaction_ID: Number,
+  Date: String,
+  Customer_ID: String,
+  Customer_Name: String,
+  // other fields...
+});
 
-module.exports =
-  mongoose.models.Sale || mongoose.model("Sale", SaleSchema);
+// 👇 FORCE correct collection name
+module.exports = mongoose.model("Sale", saleSchema, "transactions");

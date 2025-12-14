@@ -35,6 +35,10 @@ module.exports = async function handler(req, res) {
 
     const total = await Sale.countDocuments(query);
 
+    const count = await Sale.countDocuments();
+    console.log("Total records in DB:", count);
+
+
     const data = await Sale.find(query)
       .sort(sortOption)
       .skip(skip)
