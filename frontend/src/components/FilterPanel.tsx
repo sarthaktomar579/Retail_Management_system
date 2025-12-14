@@ -1,10 +1,10 @@
+import React from "react";
 import { Filters } from "../utils/types";
 
-type Props = {
+interface Props {
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-};
-
+}
 
 const OPTIONS = {
   region: ["North", "South", "East", "West", "Central"],

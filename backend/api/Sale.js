@@ -40,8 +40,10 @@ export default async function handler(req, res) {
 
     let cursor = Sale.find(query);
 
-    if (sort === "amount") cursor = cursor.sort({ "Final Amount": -1 });
-    if (sort === "date") cursor = cursor.sort({ Date: -1 });
+    if (sort === "amount_desc") cursor = cursor.sort({ "Final Amount": -1 });
+    if (sort === "amount_asc") cursor = cursor.sort({ "Final Amount": 1 });
+    if (sort === "date_desc") cursor = cursor.sort({ Date: -1 });
+    if (sort === "date_asc") cursor = cursor.sort({ Date: 1 });
 
     const total = await Sale.countDocuments(query);
     const rawData = await cursor.skip(skip).limit(limit);

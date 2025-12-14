@@ -4,7 +4,7 @@ type Props = {
 
 export default function SalesTable({ data }: Props) {
   if (!data || data.length === 0) {
-    return <p className="loading">No data found</p>;
+    return <p>No data found</p>;
   }
 
   return (
@@ -27,18 +27,18 @@ export default function SalesTable({ data }: Props) {
 
       <tbody>
         {data.map((sale) => (
-          <tr key={sale._id}>
-            <td>{sale["Transaction ID"]}</td>
-            <td>{sale["Date"]}</td>
-            <td>{sale["Customer Name"]}</td>
-            <td>{sale["Phone Number"]}</td>
-            <td>{sale["Gender"]}</td>
-            <td>{sale["Age"]}</td>
-            <td>{sale["Customer Region"]}</td>
-            <td>{sale["Product Category"]}</td>
-            <td>{sale["Tags"]}</td>
-            <td>{sale["Payment Method"]}</td>
-            <td>₹{sale["Final Amount"]}</td>
+          <tr key={sale.id}>
+            <td>{sale.id}</td>
+            <td>{sale.date}</td>
+            <td>{sale.customer}</td>
+            <td>{sale.phone}</td>
+            <td>{sale.gender}</td>
+            <td>{sale.age}</td>
+            <td>{sale.region}</td>
+            <td>{sale.category}</td>
+            <td>{sale.tags}</td>
+            <td>{sale.payment}</td>
+            <td>₹{sale.amount}</td>
           </tr>
         ))}
       </tbody>

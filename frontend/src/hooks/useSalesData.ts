@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { getSales } from "../services/salesApi";
+import { Filters } from "../types";
 
-import { Filters } from "../utils/types";
-
-const initialFilters: Filters = {
-  region: [],
-  gender: [],
-  category: [],
-  paymentMethod: [],
-};
 export default function useSalesData() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,15 +9,25 @@ export default function useSalesData() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
-  const [filters, setFilters] = useState(initialFilters);
+
+  const [filters, setFilters] = useState<Filters>({
+    region: [],
+    gender: [],
+    category: [],
+    paymentMethod: [],
+  });
 
   useEffect(() => {
     setLoading(true);
-
     getSales({ page, search, sort, filters })
       .then((res) => {
-        setData(res.data);          // ✅ IMPORTANT
-        setTotalPages(res.totalPages);
+        setData(res.data || []);
+        setTotalPages(res.totalPages || 1);
+      })
+      .catch((err) => {
+        console.error("Error fetching sales data:", err);
+        setData([]);
+        setTotalPages(1);
       })
       .finally(() => setLoading(false));
   }, [page, search, sort, filters]);
