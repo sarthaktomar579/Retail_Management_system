@@ -10,7 +10,18 @@ export async function getSales({ page, search, sort, filters }: any) {
   });
 
   const res = await fetch(
-    `https://backend-sigma-ten.vercel.app/api/Sale?${params.toString()}`
+    `https://backend-sigma-ten.vercel.app/api/Sale?${params.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch sales");
+  }
+
   return res.json();
 }

@@ -1,5 +1,5 @@
-import connectDB from "../src/utils/db.js";
-import Sale from "../model/Sale.js";
+import connectDB from "../src/utils/db";
+import Sale from "../model/Sale";
 
 export default async function handler(req, res) {
   // ✅ CORS HEADERS (VERY IMPORTANT)
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Handle preflight request
+  // Preflight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -17,55 +17,50 @@ export default async function handler(req, res) {
 
     const {
       page = 1,
-      limit = 10,
       search = "",
       sort = "",
       region,
       gender,
       category,
-      paymentMethod,
+      paymentMethod
     } = req.query;
+
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
     const query = {};
 
     // 🔍 Search
     if (search) {
-      query.$or = [
-        { "Customer Name": { $regex: search, $options: "i" } },
-        { "Product Name": { $regex: search, $options: "i" } },
-      ];
+      query["Customer Name"] = { $regex: search, $options: "i" };
     }
 
     // 🎯 Filters
     if (region) query["Customer Region"] = { $in: region.split(",") };
     if (gender) query["Gender"] = { $in: gender.split(",") };
     if (category) query["Product Category"] = { $in: category.split(",") };
-    if (paymentMethod)
-      query["Payment Method"] = { $in: paymentMethod.split(",") };
+    if (paymentMethod) query["Payment Method"] = { $in: paymentMethod.split(",") };
 
     // 🔃 Sorting
-    let sortObj = {};
-    if (sort) {
-      const [key, order] = sort.split(":");
-      sortObj[key] = order === "desc" ? -1 : 1;
-    }
-
-    const skip = (page - 1) * limit;
+    let sortOption = {};
+    if (sort === "amount") sortOption["Final Amount"] = -1;
+    if (sort === "date") sortOption["Date"] = -1;
 
     const data = await Sale.find(query)
-      .sort(sortObj)
+      .sort(sortOption)
       .skip(skip)
-      .limit(Number(limit));
+      .limit(limit);
 
     const total = await Sale.countDocuments(query);
 
     return res.status(200).json({
       data,
       totalPages: Math.ceil(total / limit),
-      currentPage: Number(page),
+      currentPage: Number(page)
     });
-  } catch (error) {
-    console.error("API ERROR:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Error" });
   }
 }
