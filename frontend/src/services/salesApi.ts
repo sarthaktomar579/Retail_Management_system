@@ -1,4 +1,4 @@
-const BASE_URL = "https://backend-sigma-ten.vercel.app";
+const API_BASE = "https://backend-sigma-ten.vercel.app";
 
 export async function getSales({ page, search, sort, filters }: any) {
   const params = new URLSearchParams();
@@ -11,19 +11,8 @@ export async function getSales({ page, search, sort, filters }: any) {
     if (value.length) params.set(key, value.join(","));
   });
 
-  const res = await fetch(
-    `${BASE_URL}/api/Sale?${params.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch sales");
-  }
+  const res = await fetch(`${API_BASE}/api/Sale?${params.toString()}`);
+  if (!res.ok) throw new Error("Failed to fetch sales");
 
   return res.json();
 }
