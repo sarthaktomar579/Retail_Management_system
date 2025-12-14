@@ -10,7 +10,7 @@ export async function getSales({ page, search, sort, filters }: any) {
   });
 
   const res = await fetch(
-    `https://retail-management-system-gules.vercel.app/api/sales?${params.toString()}`
+    `https://backend-sigma-ten.vercel.app/api/Sale?${params.toString()}`
   );
   return res.json();
 }
