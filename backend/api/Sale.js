@@ -49,8 +49,8 @@ export default async function handler(req, res) {
     const rawData = await cursor.skip(skip).limit(limit);
 
     // 🔥 NORMALIZE FIELDS FOR FRONTEND
-    const data = rawData.map(d => ({
-      id: d["Transaction ID"],
+    const data = rawData.map((d, index) => ({
+      id: d["Transaction ID"] || d["TransactionID"] || d["Transaction_Id"] || d._id?.toString() || `TXN-${index + 1}`,
       date: d["Date"],
       customer: d["Customer Name"],
       phone: d["Phone Number"],
