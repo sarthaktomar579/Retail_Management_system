@@ -1,31 +1,32 @@
 import { useEffect, useState } from "react";
 import { getSales } from "../services/salesApi";
-import type { Sale, Filters } from "../utils/types";
 
+import { Filters } from "../utils/types";
+
+const initialFilters: Filters = {
+  region: [],
+  gender: [],
+  category: [],
+  paymentMethod: [],
+};
 export default function useSalesData() {
-  const [data, setData] = useState<Sale[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
-
-  const [filters, setFilters] = useState<Filters>({
-    region: [],
-    gender: [],
-    category: [],
-    paymentMethod: [],
-  });
+  const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
     setLoading(true);
-    getSales({ page, search, sort, filters }).then((res) => {
-      setData(res.data);
-      setTotalPages(res.totalPages);
-      setLoading(false);
-    });
+
+    getSales({ page, search, sort, filters })
+      .then((res) => {
+        setData(res.data);          // ✅ IMPORTANT
+        setTotalPages(res.totalPages);
+      })
+      .finally(() => setLoading(false));
   }, [page, search, sort, filters]);
 
   return {

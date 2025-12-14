@@ -13,9 +13,9 @@ export interface Sale {
   amount: number;
 }
 
-export interface Filters {
+export type Filters = {
   region: string[];
   gender: string[];
   category: string[];
   paymentMethod: string[];
-}
+};

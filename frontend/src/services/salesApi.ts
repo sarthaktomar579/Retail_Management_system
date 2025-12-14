@@ -14,6 +14,5 @@ export async function getSales({ page, search, sort, filters }: any) {
   const res = await fetch(`${API_BASE}/api/Sale?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch sales");
 
-  const json = await res.json();
-  return json.data; // IMPORTANT
+  return res.json();
 }

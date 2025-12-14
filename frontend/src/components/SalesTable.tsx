@@ -3,6 +3,10 @@ type Props = {
 };
 
 export default function SalesTable({ data }: Props) {
+  if (!data || data.length === 0) {
+    return <p className="loading">No data found</p>;
+  }
+
   return (
     <table className="sales-table">
       <thead>
