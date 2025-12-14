@@ -10,7 +10,7 @@ export async function getSales({ page, search, sort, filters }: any) {
   });
 
   const res = await fetch(
-    `http://localhost:5000/api/sales?${params.toString()}`
+    `https://retail-management-system-gules.vercel.app/api/sales?${params.toString()}`
   );
   return res.json();
 }
