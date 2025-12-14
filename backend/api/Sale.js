@@ -1,13 +1,12 @@
-import connectDB from "../src/utils/db";
-import Sale from "../model/Sale";
+import connectDB from "../src/utils/db.js";
+import Sale from "../model/Sale.js";
 
 export default async function handler(req, res) {
-  // ✅ CORS HEADERS (VERY IMPORTANT)
+  // 🔥 CORS HEADERS (MANDATORY)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Preflight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -30,30 +29,39 @@ export default async function handler(req, res) {
 
     const query = {};
 
-    // 🔍 Search
     if (search) {
       query["Customer Name"] = { $regex: search, $options: "i" };
     }
 
-    // 🎯 Filters
     if (region) query["Customer Region"] = { $in: region.split(",") };
     if (gender) query["Gender"] = { $in: gender.split(",") };
     if (category) query["Product Category"] = { $in: category.split(",") };
     if (paymentMethod) query["Payment Method"] = { $in: paymentMethod.split(",") };
 
-    // 🔃 Sorting
-    let sortOption = {};
-    if (sort === "amount") sortOption["Final Amount"] = -1;
-    if (sort === "date") sortOption["Date"] = -1;
+    let cursor = Sale.find(query);
 
-    const data = await Sale.find(query)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
+    if (sort === "amount") cursor = cursor.sort({ "Final Amount": -1 });
+    if (sort === "date") cursor = cursor.sort({ Date: -1 });
 
     const total = await Sale.countDocuments(query);
+    const rawData = await cursor.skip(skip).limit(limit);
 
-    return res.status(200).json({
+    // 🔥 NORMALIZE FIELDS FOR FRONTEND
+    const data = rawData.map(d => ({
+      id: d["Transaction ID"],
+      date: d["Date"],
+      customer: d["Customer Name"],
+      phone: d["Phone Number"],
+      gender: d["Gender"],
+      age: d["Age"],
+      region: d["Customer Region"],
+      category: d["Product Category"],
+      tags: d["Tags"],
+      payment: d["Payment Method"],
+      amount: d["Final Amount"]
+    }));
+
+    res.json({
       data,
       totalPages: Math.ceil(total / limit),
       currentPage: Number(page)
@@ -61,6 +69,6 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: "Server Error" });
   }
 }

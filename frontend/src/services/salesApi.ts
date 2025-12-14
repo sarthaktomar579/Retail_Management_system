@@ -1,3 +1,5 @@
+const BASE_URL = "https://backend-sigma-ten.vercel.app";
+
 export async function getSales({ page, search, sort, filters }: any) {
   const params = new URLSearchParams();
   params.set("page", String(page));
@@ -10,7 +12,7 @@ export async function getSales({ page, search, sort, filters }: any) {
   });
 
   const res = await fetch(
-    `https://backend-sigma-ten.vercel.app/api/Sale?${params.toString()}`,
+    `${BASE_URL}/api/Sale?${params.toString()}`,
     {
       method: "GET",
       headers: {
