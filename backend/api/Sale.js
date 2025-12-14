@@ -40,10 +40,19 @@ export default async function handler(req, res) {
 
     let cursor = Sale.find(query);
 
-    if (sort === "amount_desc") cursor = cursor.sort({ "Final Amount": -1 });
-    if (sort === "amount_asc") cursor = cursor.sort({ "Final Amount": 1 });
-    if (sort === "date_desc") cursor = cursor.sort({ Date: -1 });
-    if (sort === "date_asc") cursor = cursor.sort({ Date: 1 });
+    // Default sort by Transaction ID (ascending) to ensure consistent ordering
+    if (sort === "amount_desc") {
+      cursor = cursor.sort({ "Final Amount": -1 });
+    } else if (sort === "amount_asc") {
+      cursor = cursor.sort({ "Final Amount": 1 });
+    } else if (sort === "date_desc") {
+      cursor = cursor.sort({ Date: -1 });
+    } else if (sort === "date_asc") {
+      cursor = cursor.sort({ Date: 1 });
+    } else {
+      // Default: sort by Transaction ID ascending (so ID 1 comes first)
+      cursor = cursor.sort({ "Transaction ID": 1 });
+    }
 
     const total = await Sale.countDocuments(query);
     const rawData = await cursor.skip(skip).limit(limit);
