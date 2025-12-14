@@ -3,7 +3,6 @@ const Sale = require("../model/Sale");
 
 module.exports = async function handler(req, res) {
   try {
-    // ✅ Always connect first
     await connectDB();
 
     const page = Number(req.query.page) || 1;
@@ -28,7 +27,7 @@ module.exports = async function handler(req, res) {
     });
 
     // SORT
-    let sortOption = {};
+    const sortOption = {};
     if (req.query.sort === "name-asc") sortOption.customerName = 1;
     if (req.query.sort === "name-desc") sortOption.customerName = -1;
     if (req.query.sort === "amount-asc") sortOption.amount = 1;
@@ -41,14 +40,13 @@ module.exports = async function handler(req, res) {
       .skip(skip)
       .limit(LIMIT);
 
-    return res.status(200).json({
+    res.status(200).json({
       data,
       totalPages: Math.ceil(total / LIMIT),
       currentPage: page,
     });
-
   } catch (error) {
-    console.error("API ERROR:", error); // 👈 VERY IMPORTANT
-    return res.status(500).json({ error: error.message });
+    console.error("API ERROR:", error);
+    res.status(500).json({ error: error.message });
   }
 };
